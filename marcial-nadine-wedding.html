@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marcial & Nadine — 31.07.2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #FDFAF6;
+      --ivory:        #F8F4EE;
+      --warm:         #EEE8DF;
+      --blush:        #E8B4A8;
+      --blush-light:  #F2D5CE;
+      --blush-pale:   #FAF0ED;
+      --sage:         #8EAF9E;
+      --sage-light:   #C3D9CF;
+      --sage-pale:    #EBF3EF;
+      --gold:         #C49A6C;
+      --gold-pale:    #F5EAD8;
+      --ink:          #2A2520;
+      --mid:          #7A7268;
+      --light:        #B8B0A6;
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans:  'Jost', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===================== ENVELOPE ===================== */
+    #envelope-scene {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 200;
+      overflow: hidden;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+    #envelope-scene::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 20%, #F7E8E2 0%, transparent 60%),
+        radial-gradient(ellipse 70% 70% at 85% 80%, #E1EDE6 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 60% 5%,  #FBF0E2 0%, transparent 55%),
+        #FDFAF6;
+    }
+    #envelope-scene.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .env-wrapper {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center;
+      animation: riseIn 1.4s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    @keyframes riseIn {
+      from { opacity:0; transform:translateY(36px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .env-box {
+      position: relative;
+      width: min(420px, 88vw);
+      cursor: pointer;
+      perspective: 1200px;
+    }
+    .env-body {
+      position: relative;
+      width: 100%; padding-bottom: 64%;
+      border-radius: 4px;
+      box-shadow:
+        0 4px 12px rgba(180,140,110,.08),
+        0 12px 40px rgba(180,140,110,.12),
+        0 32px 80px rgba(180,140,110,.1);
+    }
+    .env-base {
+      position: absolute; inset: 0;
+      background: linear-gradient(155deg,#F5EEE5,#EDE5D9);
+      border-radius: 4px; overflow: hidden;
+    }
+    .fold-l { position:absolute;inset:0;clip-path:polygon(0 0,0 100%,52% 50%);background:linear-gradient(110deg,#E8E0D2,#EDE5D9); }
+    .fold-r { position:absolute;inset:0;clip-path:polygon(100% 0,100% 100%,48% 50%);background:linear-gradient(250deg,#E2D9CA,#EDE5D9); }
+    .fold-b { position:absolute;inset:0;clip-path:polygon(0 100%,50% 46%,100% 100%);background:linear-gradient(175deg,#DDD5C6,#E8E0D2); }
+
+    .env-letter {
+      position:absolute; left:8%; right:8%; bottom:0; height:86%;
+      background:white; border-radius:3px 3px 0 0;
+      transform:translateY(4px);
+      transition:transform 1s cubic-bezier(0.16,1,0.3,1);
+      z-index:2; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      box-shadow:0 -2px 24px rgba(0,0,0,.05);
+      overflow:hidden; padding:24px 20px;
+    }
+    .env-letter::before {
+      content:''; position:absolute; top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,var(--sage-light),var(--blush),var(--gold));
+    }
+    .env-letter.up { transform:translateY(-54%); }
+
+    .letter-inner {
+      text-align:center; opacity:0; transform:translateY(10px);
+      transition:opacity .7s ease .55s, transform .7s ease .55s;
+    }
+    .letter-inner.show { opacity:1; transform:translateY(0); }
+    .letter-names { font-family:var(--serif); font-size:clamp(22px,6vw,30px); font-weight:400; color:var(--ink); }
+    .letter-amp { font-style:italic; color:var(--blush); font-weight:300; }
+    .letter-date { margin-top:6px; font-size:10px; letter-spacing:5px; text-transform:uppercase; color:var(--light); font-weight:300; }
+    .open-btn {
+      margin-top:22px; padding:11px 26px;
+      border:1.5px solid var(--blush); background:transparent; color:var(--blush);
+      font-family:var(--sans); font-size:10px; letter-spacing:2.5px; text-transform:uppercase;
+      cursor:pointer; border-radius:40px; font-weight:400;
+      transition:all .3s ease;
+    }
+    .open-btn:hover { background:var(--blush); color:white; }
+
+    .env-flap {
+      position:absolute; top:-1px;left:-1px;right:-1px; height:54%;
+      transform-origin:top center; transform-style:preserve-3d;
+      transition:transform .9s cubic-bezier(0.4,0,0.2,1); z-index:5;
+    }
+    .flap-f {
+      position:absolute;inset:0;
+      background:linear-gradient(165deg,#EEE8DF 50%,#E5DDD0);
+      clip-path:polygon(0 0,50% 100%,100% 0);
+      border-radius:4px 4px 0 0;
+    }
+    .env-flap.open { transform:rotateX(-185deg); }
+
+    .seal {
+      position:absolute; width:54px; height:54px;
+      background:radial-gradient(circle at 35% 32%,#DDB98A,var(--gold));
+      border-radius:50%; top:calc(54% - 27px); left:50%; transform:translateX(-50%);
+      z-index:6; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 3px 16px rgba(196,154,108,.45);
+      font-family:var(--serif); font-style:italic; color:rgba(255,255,255,.95);
+      font-size:13px; letter-spacing:.5px;
+      transition:opacity .35s ease,transform .35s ease;
+    }
+    .seal.gone { opacity:0; transform:translateX(-50%) scale(0.7); }
+
+    .env-hint {
+      margin-top:28px; font-size:9px; letter-spacing:5px; text-transform:uppercase;
+      color:var(--light); font-weight:300;
+      animation:pulse 2.6s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.25} 50%{opacity:.75} }
+
+    /* ===================== INVITATION ===================== */
+    #invitation { display:none; opacity:0; transform:translateY(20px); transition:opacity .9s ease,transform .9s ease; }
+    #invitation.show { opacity:1; transform:none; }
+
+    .lang-toggle {
+      position:fixed; top:20px; right:20px; z-index:100;
+      display:flex; gap:3px;
+      background:rgba(253,250,246,.92); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border-radius:30px; padding:4px;
+      border:1px solid rgba(180,150,120,.15);
+      box-shadow:0 2px 20px rgba(0,0,0,.07);
+    }
+    .lang-btn {
+      padding:6px 18px; border:none; background:transparent;
+      font-size:10px; letter-spacing:2px; font-family:var(--sans);
+      cursor:pointer; border-radius:24px;
+      transition:all .25s ease; color:var(--mid); font-weight:400;
+    }
+    .lang-btn.active { background:var(--ink); color:white; }
+
+    /* HERO */
+    .hero {
+      min-height:100svh; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:100px 40px 80px;
+      position:relative; overflow:hidden;
+    }
+    .hero-bg { position:absolute; inset:0; z-index:0; }
+    .blob { position:absolute; border-radius:50%; filter:blur(80px); opacity:.32; }
+    .blob-1 { width:500px; height:500px; background:#F2D0C6; top:-100px; left:-150px; }
+    .blob-2 { width:400px; height:400px; background:#C8DECC; top:50px; right:-100px; }
+    .blob-3 { width:350px; height:350px; background:#F5E4C8; bottom:-80px; left:30%; }
+    .hero > * { position:relative; z-index:1; }
+
+    .hero-eyebrow { font-size:10px; letter-spacing:6px; text-transform:uppercase; color:var(--blush); font-weight:400; margin-bottom:32px; }
+    .hero-names { font-family:var(--serif); font-size:clamp(64px,15vw,120px); font-weight:400; line-height:.9; color:var(--ink); letter-spacing:-2px; }
+    .hero-and { display:block; font-style:italic; font-size:.4em; font-weight:300; color:var(--blush); letter-spacing:8px; line-height:2; }
+
+    .hero-info { margin-top:32px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .hero-date { font-size:11px; letter-spacing:6px; text-transform:uppercase; color:var(--mid); font-weight:300; }
+    .hero-loc { font-family:var(--serif); font-style:italic; font-size:22px; color:var(--light); font-weight:300; }
+    .scroll-line { margin-top:48px; width:1px; height:60px; background:linear-gradient(to bottom,var(--blush-light),transparent); }
+
+    /* SECTIONS */
+    .section { padding:80px 32px; max-width:640px; margin:0 auto; }
+    .s-label {
+      display:inline-flex; align-items:center; gap:14px;
+      font-size:9px; letter-spacing:5px; text-transform:uppercase;
+      color:var(--gold); font-weight:400; margin-bottom:40px;
+    }
+    .s-label::before { content:''; width:24px; height:1px; background:var(--gold); opacity:.5; }
+
+    /* TIMELINE */
+    .timeline { list-style:none; position:relative; }
+    .tl-item { display:grid; grid-template-columns:70px 1fr; gap:0 24px; padding:20px 0; position:relative; }
+    .tl-item:not(:last-child)::after {
+      content:''; position:absolute; left:70px; top:42px; bottom:-20px;
+      width:1px; background:linear-gradient(to bottom,var(--blush-light),var(--sage-light)); opacity:.6;
+    }
+    .tl-time { font-size:11px; letter-spacing:1px; color:var(--light); text-align:right; padding-top:4px; font-weight:300; }
+    .tl-dot-col { position:relative; padding-left:24px; }
+    .tl-dot {
+      position:absolute; left:-5px; top:7px;
+      width:10px; height:10px; border-radius:50%;
+      background:white; border:2px solid var(--blush-light);
+      box-shadow:0 0 0 3px rgba(232,180,168,.15);
+    }
+    .tl-name { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--ink); line-height:1.2; }
+
+    /* VENUE */
+    .venue-card {
+      background:white; border-radius:8px; padding:32px;
+      box-shadow:0 2px 4px rgba(0,0,0,.03),0 8px 32px rgba(180,140,100,.07);
+      display:grid; grid-template-columns:1fr auto; gap:20px; align-items:center;
+    }
+    .venue-name { font-family:var(--serif); font-size:28px; font-weight:400; color:var(--ink); margin-bottom:8px; }
+    .venue-addr { font-size:14px; color:var(--mid); line-height:1.8; font-weight:300; }
+    .maps-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:10px 18px; background:var(--gold-pale); color:var(--gold);
+      border-radius:30px; font-size:10px; letter-spacing:2px; text-transform:uppercase;
+      text-decoration:none; font-weight:500; white-space:nowrap;
+      transition:all .25s ease;
+    }
+    .maps-btn:hover { background:var(--gold); color:white; }
+
+    /* INFO CARDS */
+    .info-grid { display:grid; gap:10px; }
+    .info-card {
+      background:white; border-radius:8px; overflow:hidden;
+      box-shadow:0 1px 3px rgba(0,0,0,.03),0 4px 16px rgba(180,140,100,.05);
+      transition:box-shadow .2s;
+    }
+    .info-card:hover { box-shadow:0 2px 8px rgba(0,0,0,.05),0 8px 32px rgba(180,140,100,.1); }
+    .info-trigger {
+      width:100%; display:flex; align-items:center; justify-content:space-between;
+      padding:20px 24px; background:none; border:none; cursor:pointer;
+      font-family:var(--sans); text-align:left;
+    }
+    .info-left { display:flex; align-items:center; gap:14px; }
+    .info-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .icon-travel  { background:var(--sage-pale); }
+    .icon-dress   { background:var(--blush-pale); }
+    .icon-weather { background:var(--gold-pale); }
+    .info-title { font-size:14px; font-weight:500; color:var(--ink); }
+    .info-plus { font-size:22px; color:var(--blush-light); font-weight:300; transition:transform .35s ease,color .2s; }
+    .info-card.open .info-plus { transform:rotate(45deg); color:var(--blush); }
+    .info-body { max-height:0; overflow:hidden; transition:max-height .45s cubic-bezier(0.4,0,0.2,1); }
+    .info-body-inner { padding:0 24px 24px 74px; font-size:14px; line-height:1.9; color:var(--mid); font-weight:300; }
+    .info-body-inner p+p { margin-top:10px; }
+    @media(max-width:480px){ .info-body-inner{padding-left:24px;} }
+
+    /* RSVP */
+    .rsvp-section {
+      background:linear-gradient(160deg,#F7EDE8 0%,#EEF4F0 45%,#F7F0E8 100%);
+      padding:96px 32px;
+    }
+    .rsvp-inner { max-width:540px; margin:0 auto; }
+    .rsvp-section .s-label { color:var(--sage); }
+    .rsvp-section .s-label::before { background:var(--sage); }
+    .rsvp-title { font-family:var(--serif); font-size:clamp(38px,9vw,58px); font-weight:400; color:var(--ink); line-height:1.05; margin-bottom:8px; }
+    .rsvp-sub { font-size:12px; letter-spacing:2px; color:var(--light); font-weight:300; margin-bottom:52px; }
+
+    .form-group { margin-bottom:30px; }
+    .form-label { display:block; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--mid); margin-bottom:10px; font-weight:400; }
+    .form-input {
+      width:100%; background:white; border:1.5px solid rgba(180,160,140,.2);
+      color:var(--ink); padding:14px 18px; font-family:var(--sans); font-size:14px;
+      border-radius:8px; outline:none; font-weight:300;
+      transition:border-color .2s,box-shadow .2s; -webkit-appearance:none;
+    }
+    .form-input:focus { border-color:var(--blush); box-shadow:0 0 0 3px rgba(232,180,168,.15); }
+    .form-input::placeholder { color:var(--light); }
+
+    .toggle-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .tog-btn {
+      padding:14px 10px; background:white; border:1.5px solid rgba(180,160,140,.2);
+      color:var(--mid); font-family:var(--sans); font-size:13px;
+      cursor:pointer; border-radius:8px; transition:all .25s; font-weight:300; text-align:center;
+    }
+    .tog-btn.sel-yes { border-color:var(--sage); background:var(--sage-pale); color:var(--sage); }
+    .tog-btn.sel-no  { border-color:var(--blush); background:var(--blush-pale); color:var(--blush); }
+
+    .parts-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .part-item {
+      display:flex; align-items:center; gap:12px;
+      padding:14px 16px; background:white;
+      border:1.5px solid rgba(180,160,140,.2); border-radius:8px;
+      cursor:pointer; user-select:none; transition:all .2s;
+    }
+    .part-item.on { border-color:var(--sage-light); background:var(--sage-pale); }
+    .part-check {
+      width:18px; height:18px; border:1.5px solid rgba(180,160,140,.3);
+      border-radius:4px; display:flex; align-items:center; justify-content:center;
+      font-size:10px; color:var(--sage); flex-shrink:0; transition:all .2s;
+    }
+    .part-item.on .part-check { border-color:var(--sage); background:var(--sage-pale); }
+    .part-lbl { font-size:13px; color:var(--mid); font-weight:300; }
+
+    #guestNamesWrap { display:none; margin-top:16px; }
+    .guest-name-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .guest-name-row label { font-size:11px; color:var(--light); font-weight:300; min-width:60px; }
+
+    .sub-btn {
+      width:100%; padding:18px; background:var(--ink); border:none;
+      color:white; font-family:var(--sans); font-size:10px; letter-spacing:3.5px;
+      text-transform:uppercase; cursor:pointer; border-radius:8px; margin-top:24px;
+      font-weight:400; transition:all .3s;
+    }
+    .sub-btn:hover { background:var(--blush); transform:translateY(-2px); box-shadow:0 8px 24px rgba(232,180,168,.4); }
+    .sub-btn:active { transform:none; }
+
+    #notMsg {
+      display:none; padding:24px; background:white; border-radius:8px;
+      margin-bottom:28px; font-size:14px; color:var(--mid); line-height:1.8;
+      font-weight:300; font-style:italic; border-left:3px solid var(--blush-light);
+    }
+
+    #rsvp-thanks { display:none; text-align:center; padding:40px 0; }
+    .ty-icon { font-family:var(--serif); font-size:72px; font-style:italic; color:var(--blush); line-height:1; margin-bottom:24px; }
+    .ty-title { font-family:var(--serif); font-size:48px; font-weight:400; color:var(--ink); margin-bottom:14px; }
+    .ty-msg { font-size:15px; color:var(--mid); line-height:1.9; font-weight:300; }
+
+    /* FOOTER */
+    footer { padding:96px 32px; text-align:center; position:relative; overflow:hidden; }
+    footer::before {
+      content:''; position:absolute; inset:0;
+      background:
+        radial-gradient(ellipse 70% 60% at 10% 90%,rgba(242,208,198,.32) 0%,transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 10%,rgba(200,222,204,.28) 0%,transparent 55%);
+    }
+    footer>*{position:relative;z-index:1;}
+    .footer-names { font-family:var(--serif); font-style:italic; font-size:clamp(36px,8vw,52px); font-weight:300; color:var(--ink); }
+    .footer-date  { margin-top:10px; font-size:9px; letter-spacing:6px; text-transform:uppercase; color:var(--light); font-weight:300; }
+
+    .fund-wrap {
+      max-width:480px; margin:60px auto 0; background:white;
+      border-radius:10px; padding:40px; text-align:left;
+      box-shadow:0 4px 32px rgba(180,140,100,.08);
+    }
+    .fund-label { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); font-weight:400; margin-bottom:16px; }
+    .fund-text  { font-size:14px; color:var(--mid); line-height:1.9; font-weight:300; }
+    .fund-cta {
+      display:inline-flex; align-items:center; gap:8px; margin-top:24px;
+      padding:13px 28px; background:var(--gold-pale); color:var(--gold);
+      border-radius:40px; font-size:10px; letter-spacing:2.5px; text-transform:uppercase;
+      text-decoration:none; font-weight:500; transition:all .3s; cursor:pointer; border:none;
+    }
+    .fund-cta:hover { background:var(--gold); color:white; }
+    .gift-button {
+      display:inline-flex; align-items:center; gap:8px; margin-top:24px;
+      padding:13px 28px; background:var(--gold-pale); color:var(--gold);
+      border-radius:40px; font-size:10px; letter-spacing:2.5px; text-transform:uppercase;
+      text-decoration:none; font-weight:500; transition:all .3s;
+    }
+    .gift-button:hover { background:var(--gold); color:white; }
+    .bank-details {
+      margin-top:24px; padding:20px 24px;
+      background:var(--ivory); border-radius:8px;
+      font-size:13px; color:var(--mid); line-height:1.9; font-weight:300;
+    }
+    .bank-details p+p { margin-top:2px; }
+    .footer-fine { margin-top:60px; font-size:10px; letter-spacing:2px; color:var(--light); font-weight:300; }
+
+    /* REVEAL */
+    .reveal { opacity:0; transform:translateY(22px); transition:opacity .8s ease,transform .8s ease; }
+    .reveal.in { opacity:1; transform:none; }
+
+    @media(max-width:520px){
+      .section{padding:56px 20px;}
+      .parts-grid{grid-template-columns:1fr;}
+      .venue-card{grid-template-columns:1fr;}
+      .fund-wrap{padding:28px 24px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- =================== ENVELOPE =================== -->
+<div id="envelope-scene">
+  <div class="env-wrapper">
+    <div class="env-box" id="envBox">
+      <div class="env-body">
+        <div class="env-base">
+          <div class="fold-l"></div>
+          <div class="fold-r"></div>
+          <div class="fold-b"></div>
+        </div>
+        <div class="env-letter" id="envLetter">
+          <div class="letter-inner" id="letterInner">
+            <div class="letter-names">Marcial <span class="letter-amp">&</span> Nadine</div>
+            <div class="letter-date">31 · 07 · 2026</div>
+            <button class="open-btn" id="openBtn" data-en="Open Invitation" data-es="Abrir Invitación">Open Invitation</button>
+          </div>
+        </div>
+        <div class="env-flap" id="envFlap"><div class="flap-f"></div></div>
+        <div class="seal" id="waxSeal">M&N</div>
+      </div>
+    </div>
+    <p class="env-hint" id="envHint" data-en="Tap to open" data-es="Toca para abrir">Tap to open</p>
+  </div>
+</div>
+
+<!-- =================== INVITATION =================== -->
+<div id="invitation">
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('es')">ES</button>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <p class="hero-eyebrow" data-en="You are invited" data-es="Estás invitado/a">You are invited</p>
+    <h1 class="hero-names">
+      Marcial
+      <span class="hero-and">&amp;</span>
+      Nadine
+    </h1>
+    <div class="hero-info">
+      <p class="hero-date" data-en="Friday · 31 July 2026" data-es="Viernes · 31 de julio de 2026">Friday · 31 July 2026</p>
+      <p class="hero-loc">Rotterdam, The Netherlands</p>
+    </div>
+    <div class="scroll-line"></div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <div class="section reveal">
+    <div class="s-label" data-en="The Day" data-es="El Día">The Day</div>
+    <ul class="timeline">
+      <li class="tl-item">
+        <span class="tl-time">16:30</span>
+        <div class="tl-dot-col"><div class="tl-dot"></div>
+          <div class="tl-name" data-en="Guest Arrival" data-es="Llegada de Invitados">Guest Arrival</div></div>
+      </li>
+      <li class="tl-item">
+        <span class="tl-time">17:00</span>
+        <div class="tl-dot-col"><div class="tl-dot"></div>
+          <div class="tl-name" data-en="Wedding Ceremony" data-es="Ceremonia de Boda">Wedding Ceremony</div></div>
+      </li>
+      <li class="tl-item">
+        <span class="tl-time">18:00</span>
+        <div class="tl-dot-col"><div class="tl-dot"></div>
+          <div class="tl-name" data-en="Reception" data-es="Recepción">Reception</div></div>
+      </li>
+      <li class="tl-item">
+        <span class="tl-time">19:00</span>
+        <div class="tl-dot-col"><div class="tl-dot"></div>
+          <div class="tl-name" data-en="Seated Dinner" data-es="Cena">Seated Dinner</div></div>
+      </li>
+      <li class="tl-item">
+        <span class="tl-time">21:00</span>
+        <div class="tl-dot-col"><div class="tl-dot"></div>
+          <div class="tl-name" data-en="Party 🎶" data-es="Fiesta 🎶">Party 🎶</div></div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- VENUE -->
+  <div class="section reveal" style="max-width:680px;">
+    <div class="s-label" data-en="The Venue" data-es="El Lugar">The Venue</div>
+    <div class="venue-card">
+      <div>
+        <div class="venue-name">De Machinist</div>
+        <div class="venue-addr">Willem Buytewechstraat 45<br>3024 BK Rotterdam<br>The Netherlands</div>
+      </div>
+      <a class="maps-btn"
+         href="https://maps.google.com/?q=De+Machinist,+Willem+Buytewechstraat+45,+3024+BK+Rotterdam"
+         target="_blank" rel="noopener"
+         data-en="Open Maps" data-es="Ver Mapa">Open Maps</a>
+    </div>
+  </div>
+
+  <!-- GOOD TO KNOW -->
+  <div class="section reveal">
+    <div class="s-label" data-en="Good to Know" data-es="Información Útil">Good to Know</div>
+    <div class="info-grid">
+
+      <div class="info-card">
+        <button class="info-trigger" onclick="toggleAccordion(this)">
+          <div class="info-left">
+            <div class="info-icon icon-travel">🚇</div>
+            <span class="info-title" data-en="Getting There" data-es="Cómo Llegar">Getting There</span>
+          </div>
+          <span class="info-plus">+</span>
+        </button>
+        <div class="info-body">
+          <div class="info-body-inner">
+            <p data-en="De Machinist is about 15 minutes from Rotterdam Centraal." data-es="De Machinist está a unos 15 minutos de Rotterdam Centraal.">De Machinist is about 15 minutes from Rotterdam Centraal.</p>
+            <p data-en="🚕 Taxi or rideshare: approx. 10 min from the station. 🚲 Rotterdam is very bike-friendly — rentals available city-wide. We recommend checking Google Maps or 9292.nl for the most up-to-date public transport options closer to the date." data-es="🚕 Taxi o rideshare: aprox. 10 min desde la estación. 🚲 Rotterdam es muy ciclista — hay alquiler por toda la ciudad. Recomendamos consultar Google Maps o 9292.nl para opciones de transporte actualizadas.">
+              🚕 Taxi or rideshare: approx. 10 min from the station.<br>
+              🚲 Rotterdam is very bike-friendly — rentals available city-wide.<br>
+              For the most up-to-date public transport routes, check Google Maps or <a href="https://9292.nl" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(196,154,108,0.4);">9292.nl</a> closer to the date.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <button class="info-trigger" onclick="toggleAccordion(this)">
+          <div class="info-left">
+            <div class="info-icon icon-dress">👗</div>
+            <span class="info-title" data-en="Dress Code" data-es="Código de Vestimenta">Dress Code</span>
+          </div>
+          <span class="info-plus">+</span>
+        </button>
+        <div class="info-body">
+          <div class="info-body-inner">
+            <p data-en="Think a warm summer evening on holiday — elegant, light, and effortless. We'd love to see soft pastel tones: blush, sage, powder blue, warm ivory, or lilac." data-es="Imagina una cálida noche de verano de vacaciones — elegante, ligera y relajada. Nos encantaría ver tonos pastel suaves: rosa palo, verde salvia, azul polvo, marfil o lila.">Think a warm summer evening on holiday — elegant, light, and effortless. We'd love to see soft pastel tones: blush, sage, powder blue, warm ivory, or lilac.</p>
+            <p data-en="Please avoid bright white, black, or dark colours. Let's keep the summer glow going! ☀️" data-es="Por favor evita el blanco puro, negro y colores oscuros. ¡Mantengamos el brillo de verano! ☀️">Please avoid bright white, black, or dark colours. Let's keep the summer glow going! ☀️</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <button class="info-trigger" onclick="toggleAccordion(this)">
+          <div class="info-left">
+            <div class="info-icon icon-weather">🌤</div>
+            <span class="info-title" data-en="Weather in Rotterdam" data-es="Clima en Rotterdam">Weather in Rotterdam</span>
+          </div>
+          <span class="info-plus">+</span>
+        </button>
+        <div class="info-body">
+          <div class="info-body-inner">
+            <p data-en="July is Rotterdam's warmest month — expect around 18–24°C. Evenings are lovely but a touch cooler, so a light wrap or blazer is always a smart idea." data-es="Julio es el mes más cálido en Rotterdam — espera unos 18–24°C. Las noches son encantadoras pero algo más frescas, así que un chal o blazer ligero siempre es buena idea.">July is Rotterdam's warmest month — expect around 18–24°C. Evenings are lovely but a touch cooler, so a light wrap or blazer is always a smart idea.</p>
+            <p data-en="This is still the Netherlands — a light layer just in case never hurt anyone. 🌦" data-es="Pero esto sigue siendo Holanda — una capa ligera por si acaso nunca sobra. 🌦">This is still the Netherlands — a light layer just in case never hurt anyone. 🌦</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RSVP -->
+  <div class="rsvp-section">
+    <div class="rsvp-inner">
+      <div class="s-label" data-en="RSVP" data-es="Confirmar Asistencia">RSVP</div>
+      <h2 class="rsvp-title" data-en="Will you join us?" data-es="¿Nos acompañas?">Will you join us?</h2>
+      <p class="rsvp-sub" data-en="Please respond by 30 May 2026" data-es="Por favor confirma antes del 30 de mayo de 2026">Please respond by 30 May 2026</p>
+
+      <div id="rsvp-form">
+        <div class="form-group">
+          <label class="form-label" data-en="Your Full Name" data-es="Tu Nombre Completo">Your Full Name</label>
+          <input class="form-input" type="text" id="rName" placeholder="Your name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-en="Will you be attending?" data-es="¿Asistirás?">Will you be attending?</label>
+          <div class="toggle-row">
+            <button class="tog-btn" id="tYes" onclick="setAttend(true)" data-en="Yes, I'll be there 🎉" data-es="¡Sí estaré! 🎉">Yes, I'll be there 🎉</button>
+            <button class="tog-btn" id="tNo"  onclick="setAttend(false)" data-en="Sorry, can't make it" data-es="Lo siento, no podré">Sorry, can't make it</button>
+          </div>
+        </div>
+
+        <div id="attendFields" style="display:none;">
+          <div class="form-group">
+            <label class="form-label" data-en="Which parts will you join?" data-es="¿A qué partes asistirás?">Which parts will you join?</label>
+            <div class="parts-grid">
+              <div class="part-item on" onclick="togglePart(this)" data-value="ceremony">
+                <div class="part-check">✓</div>
+                <span class="part-lbl" data-en="Ceremony" data-es="Ceremonia">Ceremony</span>
+              </div>
+              <div class="part-item on" onclick="togglePart(this)" data-value="reception">
+                <div class="part-check">✓</div>
+                <span class="part-lbl" data-en="Reception" data-es="Recepción">Reception</span>
+              </div>
+              <div class="part-item on" onclick="togglePart(this)" data-value="dinner">
+                <div class="part-check">✓</div>
+                <span class="part-lbl" data-en="Dinner" data-es="Cena">Dinner</span>
+              </div>
+              <div class="part-item on" onclick="togglePart(this)" data-value="party">
+                <div class="part-check">✓</div>
+                <span class="part-lbl" data-en="Party" data-es="Fiesta">Party</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-en="Number of Guests (including yourself)" data-es="Número de Invitados (incluyéndote)">Number of Guests (including yourself)</label>
+            <select class="form-input" id="gCount" onchange="updateGuestNames()">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+            <div id="guestNamesWrap"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-en="Dietary Restrictions or Allergies" data-es="Restricciones Dietéticas o Alergias">Dietary Restrictions or Allergies</label>
+            <input class="form-input" type="text" id="rDiet"
+              data-placeholder-en="Vegetarian, gluten-free, nut allergy…"
+              data-placeholder-es="Vegetariano, sin gluten, alergia a nueces…"
+              placeholder="Vegetarian, gluten-free, nut allergy…">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-en="Song Request 🎵" data-es="Petición Musical 🎵">Song Request 🎵</label>
+            <input class="form-input" type="text" id="rSong"
+              data-placeholder-en="What song gets you on the dance floor?"
+              data-placeholder-es="¿Qué canción te lleva a la pista de baile?"
+              placeholder="What song gets you on the dance floor?">
+          </div>
+        </div>
+
+        <div id="notMsg">
+          <p data-en="We'll miss you dearly. We're so glad you let us know, and we hope to celebrate together another time soon 💛"
+             data-es="Te echaremos mucho de menos. Nos alegra que nos lo hagas saber, y esperamos celebrar juntos pronto 💛">
+            We'll miss you dearly. We're so glad you let us know, and we hope to celebrate together another time soon 💛
+          </p>
+        </div>
+
+        <button class="sub-btn" onclick="submitRSVP()" data-en="Send My RSVP" data-es="Enviar Mi Confirmación">Send My RSVP</button>
+      </div>
+
+      <div id="rsvp-thanks">
+        <div class="ty-icon">♡</div>
+        <h3 class="ty-title" data-en="Thank you!" data-es="¡Gracias!">Thank you!</h3>
+        <p class="ty-msg"
+          data-en="We've received your response. We can't wait to share this day with you — see you on July 31st in Rotterdam! 🥂"
+          data-es="Hemos recibido tu confirmación. ¡No podemos esperar para compartir este día contigo — nos vemos el 31 de julio en Rotterdam! 🥂">
+          We've received your response. We can't wait to share this day with you — see you on July 31st in Rotterdam! 🥂
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-names">Marcial &amp; Nadine</div>
+    <div class="footer-date">31 · 07 · 2026 · Rotterdam</div>
+
+    <div class="fund-wrap reveal">
+      <div class="fund-label" data-en="Honeymoon &amp; Gifts" data-es="Luna de Miel &amp; Regalos">Honeymoon &amp; Gifts</div>
+      <p class="fund-text"
+        data-en="Your presence is our greatest gift. But if you'd like to contribute to our future together, a contribution to our honeymoon would mean a lot to us. There will be a small space at the venue where this is possible. Alternatively, you can also contribute via the link below."
+        data-es="Tu presencia es nuestro mayor regalo. Pero si deseas contribuir a nuestro futuro juntos, una aportación para nuestra luna de miel significaría mucho para nosotros. Habrá un pequeño espacio en el lugar donde esto será posible. Alternativamente, también puedes contribuir a través del enlace.">
+        Your presence is our greatest gift. But if you'd like to contribute to our future together, a contribution to our honeymoon would mean a lot to us. There will be a small space at the venue where this is possible. Alternatively, you can also contribute via the link below.
+      </p>
+      <a class="gift-button"
+         href="https://www.ing.nl/payreq/m/?trxid=PNWrzmXeMc2uLbt3xugKZAnyC3HD4XOE"
+         target="_blank" rel="noopener"
+         data-en="Contribute to our honeymoon"
+         data-es="Contribuir a nuestra luna de miel">
+        Contribute to our honeymoon
+      </a>
+      <div class="bank-details">
+        <p><strong data-en="Bank transfer (optional):" data-es="Transferencia bancaria (opcional):">Bank transfer (optional):</strong></p>
+        <p>IBAN: NL48 INGB 0106 9879 25</p>
+        <p data-en="Name: N Burbar, MI Silva Mercado" data-es="Nombre: N Burbar, MI Silva Mercado">Name: N Burbar, MI Silva Mercado</p>
+      </div>
+    </div>
+
+    <p class="footer-fine">Marcial &amp; Nadine · Rotterdam · 2026</p>
+  </footer>
+
+</div>
+
+<script>
+  /* LANGUAGE */
+  let lang = 'en';
+  function setLang(l) {
+    lang = l;
+    document.querySelectorAll('[data-en]').forEach(el => {
+      const v = el.getAttribute('data-' + l); if (v) el.textContent = v;
+    });
+    document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+      el.placeholder = el.getAttribute('data-placeholder-' + l) || '';
+    });
+    document.querySelectorAll('.lang-btn').forEach(b =>
+      b.classList.toggle('active', b.textContent.trim().toLowerCase() === l));
+  }
+
+  /* ENVELOPE */
+  let opened = false;
+  document.getElementById('envBox').addEventListener('click', e => { if (e.target.id !== 'openBtn' && !opened) doOpen(); });
+  document.getElementById('openBtn').addEventListener('click', showPage);
+
+  function doOpen() {
+    opened = true;
+    document.getElementById('envFlap').classList.add('open');
+    document.getElementById('envHint').style.opacity = '0';
+    setTimeout(() => document.getElementById('waxSeal').classList.add('gone'), 250);
+    setTimeout(() => {
+      document.getElementById('envLetter').classList.add('up');
+      setTimeout(() => document.getElementById('letterInner').classList.add('show'), 420);
+    }, 700);
+  }
+
+  function showPage() {
+    document.getElementById('envelope-scene').classList.add('hidden');
+    const inv = document.getElementById('invitation');
+    inv.style.display = 'block';
+    setTimeout(() => { inv.classList.add('show'); initReveal(); }, 60);
+  }
+
+  /* ACCORDION */
+  function toggleAccordion(btn) {
+    const card = btn.closest('.info-card');
+    const body = card.querySelector('.info-body');
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.info-card.open').forEach(c => {
+      c.classList.remove('open'); c.querySelector('.info-body').style.maxHeight = '0';
+    });
+    if (!isOpen) { card.classList.add('open'); body.style.maxHeight = body.scrollHeight + 40 + 'px'; }
+  }
+
+  /* RSVP */
+  let attending = null;
+  function setAttend(v) {
+    attending = v;
+    document.getElementById('tYes').className = 'tog-btn' + (v === true  ? ' sel-yes' : '');
+    document.getElementById('tNo').className  = 'tog-btn' + (v === false ? ' sel-no'  : '');
+    document.getElementById('attendFields').style.display = v ? 'block' : 'none';
+    document.getElementById('notMsg').style.display = v === false ? 'block' : 'none';
+    setLang(lang);
+  }
+
+  function togglePart(el) {
+    el.classList.toggle('on');
+    el.querySelector('.part-check').textContent = el.classList.contains('on') ? '✓' : '';
+  }
+
+  function submitRSVP() {
+    const data = {
+      name: document.getElementById('rName').value.trim(),
+      attending: attending,
+      guests: document.getElementById('gCount')?.value,
+      dietary: document.getElementById('rDiet')?.value,
+      song: document.getElementById('rSong')?.value,
+      parts: attending
+        ? [...document.querySelectorAll('.part-item.on')].map(p => p.dataset.value).join(', ')
+        : '',
+      guestNames: [...document.querySelectorAll('.extra-guest-name')]
+        .map(i => i.value.trim()).filter(Boolean).join(', ')
+    };
+    fetch("https://hook.eu1.make.com/u182d4txubfwtn8uuki2ie19ii9lejar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    .then(() => {
+      document.getElementById('rsvp-form').style.display = 'none';
+      document.getElementById('rsvp-thanks').style.display = 'block';
+      setLang(lang);
+    })
+    .catch(() => {
+      alert(lang === 'es' ? 'Algo salió mal. Por favor inténtalo de nuevo.' : 'Something went wrong. Please try again.');
+    });
+  }
+
+  function updateGuestNames() {
+    const count = parseInt(document.getElementById('gCount').value);
+    const wrap = document.getElementById('guestNamesWrap');
+    wrap.innerHTML = '';
+    if (count > 1) {
+      wrap.style.display = 'block';
+      for (let i = 2; i <= count; i++) {
+        const row = document.createElement('div');
+        row.className = 'guest-name-row';
+        row.innerHTML = `<label>Guest ${i}</label><input class="form-input extra-guest-name" type="text" placeholder="Full name" style="flex:1;">`;
+        wrap.appendChild(row);
+      }
+    } else {
+      wrap.style.display = 'none';
+    }
+  }
+
+  /* SCROLL REVEAL */
+  function initReveal() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  }
+</script>
+</body>
+</html>
