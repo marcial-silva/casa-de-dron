@@ -208,6 +208,16 @@
     }
     .s-label::before { content:''; width:24px; height:1px; background:var(--gold); opacity:.5; }
 
+    /* ARRIVAL NOTICE */
+    .arrival-notice {
+      display:flex; align-items:flex-start; gap:16px;
+      background:var(--sage-pale); border:1px solid rgba(142,175,158,.25);
+      border-radius:10px; padding:22px 24px; margin-bottom:44px;
+    }
+    .arrival-icon { font-size:20px; line-height:1; margin-top:2px; flex-shrink:0; }
+    .arrival-text { font-size:14px; line-height:1.8; color:var(--ink); font-weight:300; }
+    .arrival-text strong { font-weight:500; }
+
     /* TIMELINE */
     .timeline { list-style:none; position:relative; }
     .tl-item { display:grid; grid-template-columns:70px 1fr; gap:0 24px; padding:20px 0; position:relative; }
@@ -268,77 +278,6 @@
     .info-body-inner p+p { margin-top:10px; }
     @media(max-width:480px){ .info-body-inner{padding-left:24px;} }
 
-    /* RSVP */
-    .rsvp-section {
-      background:linear-gradient(160deg,#F7EDE8 0%,#EEF4F0 45%,#F7F0E8 100%);
-      padding:96px 32px;
-    }
-    .rsvp-inner { max-width:540px; margin:0 auto; }
-    .rsvp-section .s-label { color:var(--sage); }
-    .rsvp-section .s-label::before { background:var(--sage); }
-    .rsvp-title { font-family:var(--serif); font-size:clamp(38px,9vw,58px); font-weight:400; color:var(--ink); line-height:1.05; margin-bottom:8px; }
-    .rsvp-sub { font-size:12px; letter-spacing:2px; color:var(--light); font-weight:300; margin-bottom:52px; }
-
-    .form-group { margin-bottom:30px; }
-    .form-label { display:block; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--mid); margin-bottom:10px; font-weight:400; }
-    .form-input {
-      width:100%; background:white; border:1.5px solid rgba(180,160,140,.2);
-      color:var(--ink); padding:14px 18px; font-family:var(--sans); font-size:14px;
-      border-radius:8px; outline:none; font-weight:300;
-      transition:border-color .2s,box-shadow .2s; -webkit-appearance:none;
-    }
-    .form-input:focus { border-color:var(--blush); box-shadow:0 0 0 3px rgba(232,180,168,.15); }
-    .form-input::placeholder { color:var(--light); }
-
-    .toggle-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .tog-btn {
-      padding:14px 10px; background:white; border:1.5px solid rgba(180,160,140,.2);
-      color:var(--mid); font-family:var(--sans); font-size:13px;
-      cursor:pointer; border-radius:8px; transition:all .25s; font-weight:300; text-align:center;
-    }
-    .tog-btn.sel-yes { border-color:var(--sage); background:var(--sage-pale); color:var(--sage); }
-    .tog-btn.sel-no  { border-color:var(--blush); background:var(--blush-pale); color:var(--blush); }
-
-    .parts-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .part-item {
-      display:flex; align-items:center; gap:12px;
-      padding:14px 16px; background:white;
-      border:1.5px solid rgba(180,160,140,.2); border-radius:8px;
-      cursor:pointer; user-select:none; transition:all .2s;
-    }
-    .part-item.on { border-color:var(--sage-light); background:var(--sage-pale); }
-    .part-check {
-      width:18px; height:18px; border:1.5px solid rgba(180,160,140,.3);
-      border-radius:4px; display:flex; align-items:center; justify-content:center;
-      font-size:10px; color:var(--sage); flex-shrink:0; transition:all .2s;
-    }
-    .part-item.on .part-check { border-color:var(--sage); background:var(--sage-pale); }
-    .part-lbl { font-size:13px; color:var(--mid); font-weight:300; }
-
-    #guestNamesWrap { display:none; margin-top:16px; }
-    .guest-name-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-    .guest-name-row label { font-size:11px; color:var(--light); font-weight:300; min-width:60px; }
-
-    .sub-btn {
-      width:100%; padding:18px; background:var(--ink); border:none;
-      color:white; font-family:var(--sans); font-size:10px; letter-spacing:3.5px;
-      text-transform:uppercase; cursor:pointer; border-radius:8px; margin-top:24px;
-      font-weight:400; transition:all .3s;
-    }
-    .sub-btn:hover { background:var(--blush); transform:translateY(-2px); box-shadow:0 8px 24px rgba(232,180,168,.4); }
-    .sub-btn:active { transform:none; }
-
-    #notMsg {
-      display:none; padding:24px; background:white; border-radius:8px;
-      margin-bottom:28px; font-size:14px; color:var(--mid); line-height:1.8;
-      font-weight:300; font-style:italic; border-left:3px solid var(--blush-light);
-    }
-
-    #rsvp-thanks { display:none; text-align:center; padding:40px 0; }
-    .ty-icon { font-family:var(--serif); font-size:72px; font-style:italic; color:var(--blush); line-height:1; margin-bottom:24px; }
-    .ty-title { font-family:var(--serif); font-size:48px; font-weight:400; color:var(--ink); margin-bottom:14px; }
-    .ty-msg { font-size:15px; color:var(--mid); line-height:1.9; font-weight:300; }
-
     /* FOOTER */
     footer { padding:96px 32px; text-align:center; position:relative; overflow:hidden; }
     footer::before {
@@ -386,7 +325,6 @@
 
     @media(max-width:520px){
       .section{padding:56px 20px;}
-      .parts-grid{grid-template-columns:1fr;}
       .venue-card{grid-template-columns:1fr;}
       .fund-wrap{padding:28px 24px;}
     }
@@ -450,6 +388,16 @@
   <!-- SCHEDULE -->
   <div class="section reveal">
     <div class="s-label" data-en="The Day" data-es="El Día">The Day</div>
+
+    <div class="arrival-notice">
+      <span class="arrival-icon">🕰</span>
+      <p class="arrival-text"
+        data-en="Doors open at 16:30. Please plan to arrive by <strong>16:45</strong> so we can all begin the ceremony together at 17:00."
+        data-es="Las puertas abren a las 16:30. Por favor planea llegar antes de las <strong>16:45</strong> para que podamos comenzar la ceremonia juntos a las 17:00.">
+        Doors open at 16:30. Please plan to arrive by <strong>16:45</strong> so we can all begin the ceremony together at 17:00.
+      </p>
+    </div>
+
     <ul class="timeline">
       <li class="tl-item">
         <span class="tl-time">16:30</span>
@@ -554,100 +502,6 @@
     </div>
   </div>
 
-  <!-- RSVP -->
-  <div class="rsvp-section">
-    <div class="rsvp-inner">
-      <div class="s-label" data-en="RSVP" data-es="Confirmar Asistencia">RSVP</div>
-      <h2 class="rsvp-title" data-en="Will you join us?" data-es="¿Nos acompañas?">Will you join us?</h2>
-      <p class="rsvp-sub" data-en="Please respond by 30 May 2026" data-es="Por favor confirma antes del 30 de mayo de 2026">Please respond by 30 May 2026</p>
-
-      <div id="rsvp-form">
-        <div class="form-group">
-          <label class="form-label" data-en="Your Full Name" data-es="Tu Nombre Completo">Your Full Name</label>
-          <input class="form-input" type="text" id="rName" placeholder="Your name">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" data-en="Will you be attending?" data-es="¿Asistirás?">Will you be attending?</label>
-          <div class="toggle-row">
-            <button class="tog-btn" id="tYes" onclick="setAttend(true)" data-en="Yes, I'll be there 🎉" data-es="¡Sí estaré! 🎉">Yes, I'll be there 🎉</button>
-            <button class="tog-btn" id="tNo"  onclick="setAttend(false)" data-en="Sorry, can't make it" data-es="Lo siento, no podré">Sorry, can't make it</button>
-          </div>
-        </div>
-
-        <div id="attendFields" style="display:none;">
-          <div class="form-group">
-            <label class="form-label" data-en="Which parts will you join?" data-es="¿A qué partes asistirás?">Which parts will you join?</label>
-            <div class="parts-grid">
-              <div class="part-item on" onclick="togglePart(this)" data-value="ceremony">
-                <div class="part-check">✓</div>
-                <span class="part-lbl" data-en="Ceremony" data-es="Ceremonia">Ceremony</span>
-              </div>
-              <div class="part-item on" onclick="togglePart(this)" data-value="reception">
-                <div class="part-check">✓</div>
-                <span class="part-lbl" data-en="Reception" data-es="Recepción">Reception</span>
-              </div>
-              <div class="part-item on" onclick="togglePart(this)" data-value="dinner">
-                <div class="part-check">✓</div>
-                <span class="part-lbl" data-en="Dinner" data-es="Cena">Dinner</span>
-              </div>
-              <div class="part-item on" onclick="togglePart(this)" data-value="party">
-                <div class="part-check">✓</div>
-                <span class="part-lbl" data-en="Party" data-es="Fiesta">Party</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" data-en="Number of Guests (including yourself)" data-es="Número de Invitados (incluyéndote)">Number of Guests (including yourself)</label>
-            <select class="form-input" id="gCount" onchange="updateGuestNames()">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            <div id="guestNamesWrap"></div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" data-en="Dietary Restrictions or Allergies" data-es="Restricciones Dietéticas o Alergias">Dietary Restrictions or Allergies</label>
-            <input class="form-input" type="text" id="rDiet"
-              data-placeholder-en="Vegetarian, gluten-free, nut allergy…"
-              data-placeholder-es="Vegetariano, sin gluten, alergia a nueces…"
-              placeholder="Vegetarian, gluten-free, nut allergy…">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" data-en="Song Request 🎵" data-es="Petición Musical 🎵">Song Request 🎵</label>
-            <input class="form-input" type="text" id="rSong"
-              data-placeholder-en="What song gets you on the dance floor?"
-              data-placeholder-es="¿Qué canción te lleva a la pista de baile?"
-              placeholder="What song gets you on the dance floor?">
-          </div>
-        </div>
-
-        <div id="notMsg">
-          <p data-en="We'll miss you dearly. We're so glad you let us know, and we hope to celebrate together another time soon 💛"
-             data-es="Te echaremos mucho de menos. Nos alegra que nos lo hagas saber, y esperamos celebrar juntos pronto 💛">
-            We'll miss you dearly. We're so glad you let us know, and we hope to celebrate together another time soon 💛
-          </p>
-        </div>
-
-        <button class="sub-btn" onclick="submitRSVP()" data-en="Send My RSVP" data-es="Enviar Mi Confirmación">Send My RSVP</button>
-      </div>
-
-      <div id="rsvp-thanks">
-        <div class="ty-icon">♡</div>
-        <h3 class="ty-title" data-en="Thank you!" data-es="¡Gracias!">Thank you!</h3>
-        <p class="ty-msg"
-          data-en="We've received your response. We can't wait to share this day with you — see you on July 31st in Rotterdam! 🥂"
-          data-es="Hemos recibido tu confirmación. ¡No podemos esperar para compartir este día contigo — nos vemos el 31 de julio en Rotterdam! 🥂">
-          We've received your response. We can't wait to share this day with you — see you on July 31st in Rotterdam! 🥂
-        </p>
-      </div>
-    </div>
-  </div>
-
   <!-- FOOTER -->
   <footer>
     <div class="footer-names">Marcial &amp; Nadine</div>
@@ -661,7 +515,7 @@
         Your presence is our greatest gift. But if you would like to share something with us, a contribution to our honeymoon fund would mean a lot to us. There will be a small space at the venue where you can do so, or, if you prefer, you can also contribute via the link below or by bank transfer.
       </p>
       <a class="gift-button"
-         href="https://www.ing.nl/payreq/m/?trxid=PNWrzmXeMc2uLbt3xugKZAnyC3HD4XOE"
+         href="https://www.ing.nl/payreq/m/?trxid=FHY1ETMQaPoHD9XF8JYoTPqxIMaKDwga"
          target="_blank" rel="noopener"
          data-en="Contribute to our honeymoon"
          data-es="Contribuir a nuestra luna de miel">
@@ -684,10 +538,7 @@
   function setLang(l) {
     lang = l;
     document.querySelectorAll('[data-en]').forEach(el => {
-      const v = el.getAttribute('data-' + l); if (v) el.textContent = v;
-    });
-    document.querySelectorAll('[data-placeholder-en]').forEach(el => {
-      el.placeholder = el.getAttribute('data-placeholder-' + l) || '';
+      const v = el.getAttribute('data-' + l); if (v) el.innerHTML = v;
     });
     document.querySelectorAll('.lang-btn').forEach(b =>
       b.classList.toggle('active', b.textContent.trim().toLowerCase() === l));
@@ -725,67 +576,6 @@
       c.classList.remove('open'); c.querySelector('.info-body').style.maxHeight = '0';
     });
     if (!isOpen) { card.classList.add('open'); body.style.maxHeight = body.scrollHeight + 40 + 'px'; }
-  }
-
-  /* RSVP */
-  let attending = null;
-  function setAttend(v) {
-    attending = v;
-    document.getElementById('tYes').className = 'tog-btn' + (v === true  ? ' sel-yes' : '');
-    document.getElementById('tNo').className  = 'tog-btn' + (v === false ? ' sel-no'  : '');
-    document.getElementById('attendFields').style.display = v ? 'block' : 'none';
-    document.getElementById('notMsg').style.display = v === false ? 'block' : 'none';
-    setLang(lang);
-  }
-
-  function togglePart(el) {
-    el.classList.toggle('on');
-    el.querySelector('.part-check').textContent = el.classList.contains('on') ? '✓' : '';
-  }
-
-  function submitRSVP() {
-    const data = {
-      name: document.getElementById('rName').value.trim(),
-      attending: attending,
-      guests: document.getElementById('gCount')?.value,
-      dietary: document.getElementById('rDiet')?.value,
-      song: document.getElementById('rSong')?.value,
-      parts: attending
-        ? [...document.querySelectorAll('.part-item.on')].map(p => p.dataset.value).join(', ')
-        : '',
-      guestNames: [...document.querySelectorAll('.extra-guest-name')]
-        .map(i => i.value.trim()).filter(Boolean).join(', ')
-    };
-    fetch("https://hook.eu1.make.com/u182d4txubfwtn8uuki2ie19ii9lejar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    })
-    .then(() => {
-      document.getElementById('rsvp-form').style.display = 'none';
-      document.getElementById('rsvp-thanks').style.display = 'block';
-      setLang(lang);
-    })
-    .catch(() => {
-      alert(lang === 'es' ? 'Algo salió mal. Por favor inténtalo de nuevo.' : 'Something went wrong. Please try again.');
-    });
-  }
-
-  function updateGuestNames() {
-    const count = parseInt(document.getElementById('gCount').value);
-    const wrap = document.getElementById('guestNamesWrap');
-    wrap.innerHTML = '';
-    if (count > 1) {
-      wrap.style.display = 'block';
-      for (let i = 2; i <= count; i++) {
-        const row = document.createElement('div');
-        row.className = 'guest-name-row';
-        row.innerHTML = `<label>Guest ${i}</label><input class="form-input extra-guest-name" type="text" placeholder="Full name" style="flex:1;">`;
-        wrap.appendChild(row);
-      }
-    } else {
-      wrap.style.display = 'none';
-    }
   }
 
   /* SCROLL REVEAL */
